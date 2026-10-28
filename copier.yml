@@ -1,0 +1,6 @@
+# Shared launcher helpers for oney-erge projects. Each project keeps its own
+# run.bat / run.ps1 / run.sh / run.command and dot-sources these helpers.
+_subdirectory: template
+_templates_suffix: .jinja
+_answers_file: .copier-answers.launcher-kit.yml
+_min_copier_version: "9.4"
