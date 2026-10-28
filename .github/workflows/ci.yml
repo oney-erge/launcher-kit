@@ -1,0 +1,37 @@
+name: CI
+
+# Every launcher built from this template inherits these helpers, so test them
+# before a tag is cut.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-powershell:
+    # run.bat starts Windows PowerShell 5.1, which treats native stderr as an
+    # error under $ErrorActionPreference = "Stop".
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Launcher helpers under Windows PowerShell 5.1
+        shell: powershell
+        run: ./template/scripts/test-launcher-helpers.ps1
+
+  shell:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: bash -n template/scripts/install-utils.sh
+      - run: pipx run --spec shellcheck-py==0.11.0.1 shellcheck template/scripts/install-utils.sh
